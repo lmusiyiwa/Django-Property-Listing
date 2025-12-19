@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ house.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .gallery { display: flex; flex-wrap: wrap; gap: 10px; }
+        .gallery img { width: 200px; height: 150px; object-fit: cover; cursor: pointer; border-radius: 5px; }
+        .hero { width: 100%; max-height: 500px; object-fit: cover; margin-bottom: 20px; }
+        .about { margin: 20px 0; font-family: 'Helvetica', sans-serif; line-height: 1.6; }
+        iframe { width: 100%; height: 400px; border: 0; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>{{ house.title }}</h1>
+
+    <!-- Hero Image -->
+    {% if grouped.Exterior %}
+        <img src="{{ grouped.Exterior.0 }}" alt="Main Image" class="hero">
+    {% endif %}
+
+    <!-- Gallery -->
+    <div class="gallery">
+        {% for cat in categories %}
+            {% with imgs=grouped|get_item:cat %}
+                {% if imgs %}
+                    {% for img in imgs %}
+                        <img src="{{ img }}" alt="{{ cat }}">
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+
+    <!-- About -->
+    <div class="about">
+        <p>{{ house.description }}</p>
+    </div>
+
+    <!-- Waterfall City Map -->
+    <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3575.2742910583657!2d28.09958021503845!3d-26.038480383523073!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9565f99e1b7b87%3A0x25eae9c40a2d98f7!2sWaterfall%20City%2C%20Midrand%2C%20South%20Africa!5e0!3m2!1sen!2sza!4v1697123456789!5m2!1sen!2sza" 
+        allowfullscreen="" loading="lazy"></iframe>
+
+</body>
+</html>

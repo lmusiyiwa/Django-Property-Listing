@@ -1,0 +1,58 @@
+{% load static %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LIVE IN WATERFALL CITY</title>
+    <link rel="stylesheet" href="{% static 'css/listing.css' %}">
+</head>
+<body>
+
+<h1>LIVE IN WATERFALL CITY</h1>
+
+{% for item in all_grouped %}
+  {% with house=item.house grouped=item.grouped %}
+    <div class="listing-page">
+      <h2>{{ house.title }}</h2>
+      <p>{{ house.location }} • {{ house.bedrooms }} bd • {{ house.bathrooms }} ba</p>
+      <p>Price: R{{ house.price|intcomma }}</p>
+
+      {# --- Hero image: first available image across categories --- #}
+      {% for cat in categories %}
+        {% with imgs=grouped|get_item:cat %}
+          {% if imgs %}
+            <div class="hero-large">
+              <img src="{{ imgs.0 }}" alt="House Image" width="600">
+            </div>
+            {% break %}
+          {% endif %}
+        {% endwith %}
+      {% endfor %}
+
+      {# --- Thumbnails for each category --- #}
+      <h3>Gallery</h3>
+      <div class="thumbnails-row">
+        {% for cat in categories %}
+          {% with imgs=grouped|get_item:cat %}
+            {% if imgs %}
+              <div class="thumb-category">
+                <p>{{ cat|title }}</p>
+                {% for img in imgs %}
+                  {% if forloop.counter <= 4 %}
+                    <img src="{{ img }}" class="thumbnail">
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+      </div>
+
+    </div>
+    <hr>
+  {% endwith %}
+{% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+{% load humanize %}  <!-- Add this at the very top -->
+
+<a href="{% url 'house_list' %}"><button type="button">Back to Listings</button></a>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LEASE SPACE NOW</title>
+</head>
+<body>
+    <h1>LEASE SPACE NOW</h1>
+    
+    <h2>{% if house %}Edit House{% else %}Add House{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <p>Title: <input type="text" name="title" value="{{ house.title|default_if_none:'' }}"></p>
+        <p>Location: <input type="text" name="location" value="{{ house.location|default_if_none:'' }}"></p>
+        <p>Description:<br>
+            <textarea name="description" rows="4" cols="50">{{ house.description|default_if_none:'' }}</textarea>
+        </p>
+        <p>Price: <input type="number" name="price" value="{{ house.price|default_if_none:'' }}"></p>
+        <p>Bedrooms: <input type="number" name="bedrooms" value="{{ house.bedrooms|default_if_none:'' }}"></p>
+        <p>Bathrooms: <input type="number" name="bathrooms" value="{{ house.bathrooms|default_if_none:'' }}"></p>
+        <p>Garages: <input type="number" name="garages" value="{{ house.garages|default_if_none:'' }}"></p>
+        <p>Parking: <input type="number" name="parking" value="{{ house.parking|default_if_none:'' }}"></p>
+        
+        <p>Property Type:
+            <select name="property_type">
+                <option value="House" {% if house.property_type == 'House' %}selected{% endif %}>House</option>
+                <option value="Apartment" {% if house.property_type == 'Apartment' %}selected{% endif %}>Apartment</option>
+                <option value="Flat" {% if house.property_type == 'Flat' %}selected{% endif %}>Flat</option>
+            </select>
+        </p>
+
+        <p>
+            <label><input type="checkbox" name="study" {% if house.study %}checked{% endif %}> Study</label><br>
+            <label><input type="checkbox" name="pool" {% if house.pool %}checked{% endif %}> Pool</label><br>
+            <label><input type="checkbox" name="flatlet" {% if house.flatlet %}checked{% endif %}> Flatlet</label><br>
+            <label><input type="checkbox" name="garden" {% if house.garden %}checked{% endif %}> Garden</label><br>
+            <label><input type="checkbox" name="fibre_internet" {% if house.fibre_internet %}checked{% endif %}> Fibre Internet</label><br>
+            <label><input type="checkbox" name="backup_battery" {% if house.backup_battery %}checked{% endif %}> Backup Battery</label>
+        </p>
+        
+        <button type="submit">{% if house %}Update{% else %}Add{% endif %}</button>
+    </form>
+
+    <hr>
+    <h2>Existing Houses</h2>
+    {% for house in houses %}
+        <div style="border:1px solid #000; padding:10px; margin-bottom:10px;">
+            <h3>{{ house.title }}</h3>
+            <p><strong>Location:</strong> {{ house.location }}</p>
+            <p><strong>Property Type:</strong> {{ house.property_type }}</p>
+            <p><strong>Description:</strong> {{ house.description }}</p>
+            <p><strong>Price:</strong> R{{ house.price|intcomma }}</p>  <!-- NOW WORKS -->
+            <p>
+                <strong>Bedrooms:</strong> {{ house.bedrooms }},
+                <strong>Bathrooms:</strong> {{ house.bathrooms }},
+                <strong>Garages:</strong> {{ house.garages }},
+                <strong>Parking:</strong> {{ house.parking }}
+            </p>
+            <p>
+                <strong>Study:</strong> {{ house.study|yesno:"Available,Not Available" }},
+                <strong>Pool:</strong> {{ house.pool|yesno:"Available,Not Available" }},
+                <strong>Flatlet:</strong> {{ house.flatlet|yesno:"Available,Not Available" }},
+                <strong>Garden:</strong> {{ house.garden|yesno:"Available,Not Available" }},
+                <strong>Fibre Internet:</strong> {{ house.fibre_internet|yesno:"Available,Not Available" }},
+                <strong>Backup Battery:</strong> {{ house.backup_battery|yesno:"Available,Not Available" }}
+            </p>
+            <p>
+                <a href="{% url 'edit_house' house.id %}">Edit</a>
+            </p>
+        </div>
+    {% empty %}
+        <p>No houses added yet.</p>
+    {% endfor %}
+</body>
+</html>
+{% load humanize %}  <!-- Add this at the very top -->
+
+
+
